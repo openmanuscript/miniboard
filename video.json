@@ -1,0 +1,27 @@
+{
+"title"  : "A Very Very Cool Story",
+"frames" : [
+{
+    "img" : "none",
+    "vid" : "Title Card : Here is an example",
+    "nar" : "Let's start at the beginning."
+},
+{
+    "img" : "example_01.png",
+    "vid" : "This is your description of the action in the video",
+    "nar" : "The middle of a video is always very exciting."
+},
+{
+    "img" : "example_02.png",
+    "vid" : "This is the end of the video",
+    "nar" : "And as we reach the end, we can see the result of what we've 
+            been working on!"
+},
+{
+    "state" : "off",
+    "img" : "none",
+    "vid" : "This item will not appear in anything, because it's off",
+    "nar" : "This item will not appear in anything, because it's off"
+}
+]
+}

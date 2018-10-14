@@ -1,0 +1,120 @@
+#!/opt/local/bin/python
+
+import re
+import json
+
+video_title = 'None'
+
+with open( 'video.json', 'r' ) as video_data, open( 'narration_frames.tex', 'w') as n, open( 'frames.tex', 'w') as v:
+    videostring = "".join(line.rstrip() for line in video_data)
+    video = json.loads(videostring)
+    video_title = video['title']
+    for frame in video['frames']:
+        if 'state' not in frame: 
+            # create the video script
+            # ----------------------- 
+            # write the video/image
+            if not frame['vid'] == "unknown":
+                v.write( frame['vid'] + "\n" )
+            else:
+                v.write( " \n" )
+            if not frame['img'] == "none":
+                v.write( "\\begin{center}" )
+                v.write( "\\includegraphics[width=2.5in]{" + frame['img'] + "} " )
+                v.write( "\\end{center}" )
+            v.write( "& " )
+
+            # write the narration
+            v.write( frame['nar'] + "\n" )
+
+            v.write( "\\\\ \\hline \\hline \n" )
+
+            # create the narration script
+            # ---------------------------
+            n.write( frame['nar'] ) 
+            n.write( "\n" )
+            n.write( "\n" )
+
+
+narration = open('narration.tex', 'w')
+narration.write('''\
+\\documentclass[12pt]{article}
+
+\\usepackage[left=1in,right=1in]{geometry}
+\\usepackage{longtable}
+\\usepackage{setspace}
+\\usepackage{parskip}
+
+\\doublespacing
+
+\\begin{document}
+\\setlength{\\parskip}{0.25in}
+
+\\title{%s\\\\(Narration Script)}
+\\author{}
+\\date{}
+
+\\ttfamily
+
+\\maketitle
+
+{\\parindent0pt
+\\begin{center}
+\\input{count}
+
+\\input{date}
+\\end{center}
+}
+
+\\newpage
+
+{\\parindent0pt
+\\raggedright
+
+\\input{narration_frames}
+
+}
+
+\\end{document}''' % (video_title) )
+n.close()
+
+story = open('storyboard.tex', 'w')
+story.write('''\
+\\documentclass{article}
+
+\\usepackage{graphicx}
+\\usepackage[margin=0.25in]{geometry}
+\\usepackage{longtable}
+
+\\graphicspath{ {thumbnails/} }
+
+\\begin{document}
+
+\\title{%s\\\\(Storyboard)}
+\\author{}
+\\date{}
+
+\\ttfamily
+
+\\maketitle
+
+{\\parindent0pt
+\\begin{center}
+\\input{count}
+
+\\input{date}
+\\end{center}
+}
+
+\\noindent
+\\begin{center}
+\\begin{longtable}{| p{3.5in} | p{3.5in} |}
+\\hline
+Video & Narration \\\\
+\\hline \\hline
+\\input{frames}
+\\end{longtable}
+\\end{center}
+
+\\end{document}''' % (video_title) )
+story.close()
